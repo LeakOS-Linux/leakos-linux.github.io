@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020303">
+    
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+    <title>LeakOS - BlackArch Linux Security Conference</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        
+                    </div>
+                    <div class="logo-text" id="blink">Leak <span>OS Linux</span></div>
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">Home</a></li>
+                        <li><a href="#">Guides</a></li>
+                        <li><a href="#">Forums</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Carousel -->
+    <div class="carousel">
+        <div class="carousel-slides" id="slides">
+            <img src="assets/img/as.png" alt="Slide 1" class="slide active">
+            <img src="assets/img/as2.png" alt="Slide 2" class="slide">
+            <img src="assets/img/as3.png" alt="Slide 2" class="slide">
+            
+        </div>
+        
+        <div class="carousel-dots" id="dots"></div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            
+            
+            <div class="hero-actions">
+                <a href="#" class="cta-primary">
+                    <i class="fas fa-book"></i> Guides
+                </a>
+                <a href="#card-section" class="cta-secondary">
+                    <i class="fas fa-download"></i> Download
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Logo Slider -->
+    <div class="slider glow-effect">
+    <div id="dragLayer">
+    <div class="slide-track" id="logoTrack">
+    <!-- Gambar asli (9 gambar) -->
+    <div class="slidec"><img src="assets/icons/apps/parrot-armitage.png" alt="Armitage"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-burpsuite.png" alt="Burp Suite"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-wireshark.png" alt="Wireshark"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-medusa.png" alt="Medusa"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-metasploit.png" alt="Metasploit"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-john.png" alt="John the Ripper"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-commix.png" alt="Commix"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-autopsy.png" alt="Autopsy"></div>
+    <div class="slidec"><img src="assets/icons/apps/parrot-mitmproxy.png" alt="APKTool"></div>
+    
+   
+  
+    </div>
+    </div>
+    </div>
+    
+    <!-- Simple Tools Section -->
+    <section class="simple-tools">
+    <h3 class="section-title">System Requirements</h3>
+    <div class="simple-grid">
+    <!-- Card 1: Minimal Requirements -->
+    <div class="simple-card minimal">
+    <div class="simple-icon">
+    <i class="fas fa-microchip"></i>
+    </div>
+    <div class="simple-content">
+    <span class="simple-label">Minimal Requirements</span>
+    <ul class="requirements-list">
+    <li><strong>CPU:</strong> 64-bit Processor</li>
+    <li><strong>RAM:</strong> 4 GB</li>
+    <li><strong>Storage:</strong> 50 GB free space</li>
+    <li><strong>Graphics:</strong> No Graphic Acceleration</li>
+    <li><strong>Network:</strong> Ethernet/Wi-Fi</li>
+    <li><strong>Boot:</strong> USB/HDD boot support</li>
+    </ul>
+    
+    </div>
+    </div>
+    
+    <div class="simple-card minimal">
+    <div class="simple-icon">
+    <i class="fas fa-microchip"></i>
+    </div>
+    <div class="simple-content">
+    <span class="simple-label">Recommended Requirements</span>
+    <ul class="requirements-list">
+    <li><strong>CPU:</strong> 64-bit Processor</li>
+    <li><strong>RAM:</strong> 8 GB</li>
+    <li><strong>Storage:</strong> 150 GB free space</li>
+    <li><strong>Graphics:</strong> No Graphic Acceleration</li>
+    <li><strong>Network:</strong> Ethernet/Wi-Fi</li>
+    <li><strong>Boot:</strong> USB/HDD boot support</li>
+    </ul>
+    
+    </div>
+    </div>
+    
+    </div>
+    </section>
+    
+    
+    
+    <!-- Main Content -->
+    <div class="container" id="card-section">
+        <div class="main-content">
+            <!-- Downloads Section -->
+            <section>
+                <div class="section-subtitle">Downloads</div>
+                <h2 class="section-title">Choose File</h2>
+                
+                <div class="cards-grid">
+                    <!-- Card 1 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h3 class="card-title">Virtual Machines</h3>
+                            <span class="blackarch-badge">AMD64</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                Pre-built VMware/VirtualBox image ready to import. Default credentials: user "leak" password "leak".
+                            </p>
+                            <div class="download-size">
+                                <i class="fas fa-hdd"></i> Size: 4.2 GB
+                            </div>
+                            <ul class="card-features">
+                                <li>
+                                    <i class="fa-solid fa-compact-disc fa-xl"></i>
+                                    <a href="https://google.com">leakos-amd64.ova</a>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-compact-disc fa-xl"></i>
+                                    <a href="https://google.com">leakos-amd64.ova</a>
+                                </li>
+                                <li><i class="fas fa-check"></i> VMware & VirtualBox</li>
+                                <li><i class="fas fa-check"></i> Tools pre-configured</li>
+                                <li><i class="fas fa-check"></i> Network ready</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="hash-box">
+                            <div class="hash-title">SHA256 Checksum:</div>
+                            <div>a1b2c3d4e5f678901234567890abcdef1234567890abcdef1234567890abcdef</div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">user: leakos password: leak</span>
+                            <button class="card-btn">Ova</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="card-title">Installer Images</h3>
+                            <span class="blackarch-badge">AMD64</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                Full installation image with XFCE, DWM, and Openbox window managers. Includes all 200+ hacking tools pre-installed.
+                            </p>
+                            <div class="download-size">
+                                <i class="fas fa-hdd"></i> Size: 4.2 GB
+                            </div>
+                            <ul class="card-features">
+                                <li>
+                                    <i class="fa-solid fa-compact-disc fa-xl"></i>
+                                    <a href="https://google.com">leakos-amd64.iso</a>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-compact-disc fa-xl"></i>
+                                    <a href="https://google.com">leakos-r1-x86_64.iso</a>
+                                </li>
+                                <li><i class="fas fa-check"></i> Live boot environment</li>
+                                <li><i class="fas fa-check"></i> Cli Installer</li>
+                                <li><i class="fas fa-check"></i> Hacking Tools included</li>
+                            </ul>
+                        </div>
+                        <div class="hash-box">
+                            <div class="hash-title">SHA256 Checksum:</div>
+                            <div>a1b2c3d4e5f678901234567890abcdef1234567890abcdef1234567890abcdef</div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">Apr 26-27, 2026</span>
+                            <button class="card-btn">ISO</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Terminal Section -->
+            <section class="terminal-section">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                    </div>
+                    <div class="terminal-title">root#hacktheplanet:~</div>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">┌──(leak㉿leakos)-[~]</span>
+                        <span class="terminal-command">cat /etc/os-release</span>
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        LeakOS Penetration Testing Distribution
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        Version: 2026.01 (Rolling Release)
+                    </div>
+                    <div class="terminal-line terminal-output"></div>
+                    
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">┌──(leak㉿leakos)-[~]</span>
+                        <span class="terminal-command">leakos-about</span>
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        LeakOS is a custom-built penetration testing distribution based on the principles of Linux From Scratch (LFS).
+                        
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        It allows users to build and customize every aspect of the system from the ground up, ensuring maximum control and flexibility.
+                        
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        LeakOS provides a minimal yet powerful environment, specifically tailored for security researchers and ethical hackers.
+                        
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        Unlike other pre-configured distros, LeakOS encourages deep system understanding and customization.
+                        
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        The system includes multiple window managers such as XFCE, DWM, and Openbox, allowing users to choose their preferred interface.
+                        
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        LeakOS is designed to be lightweight and fast, with a focus on security and penetration testing tools.
+                        
+                    </div>
+                    
+                    
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">┌──(leak㉿leakos)-[~]</span>
+                        <span class="terminal-command">leakos-info</span>
+                        <span class="cursor">▊</span>
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        Distributor ID: LeakOS
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        Description: LeakOS Penetration Testing OS (LFS-inspired custom build)
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        Release: 2026.01
+                    </div>
+                    <div class="terminal-line terminal-output">
+                        Codename: leak
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Stats Section -->
+            <section>
+                <div class="section-subtitle">LeakOS by Numbers</div>
+                <h2 class="section-title">Community Statistics</h2>
+                
+                <div class="stats-section">
+                    <div class="stat-card">
+                        <div class="stat-number">200</div>
+                        <div class="stat-label">Hacking Tools</div>
+                        <p style="margin-top: 10px; font-size: clamp(12px, 1.5vw, 14px); color: #888;">
+                            in LeakOS repository
+                        </p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Active Community</div>
+                        <p style="margin-top: 10px; font-size: clamp(12px, 1.5vw, 14px); color: #888;">
+                            IRC, Discord & Forums
+                        </p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">CTF Categories</div>
+                        <p style="margin-top: 10px; font-size: clamp(12px, 1.5vw, 14px); color: #888;">
+                            Web, Crypto, Pwn, Reverse, etc
+                        </p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Active Researchers</div>
+                        <p style="margin-top: 10px; font-size: clamp(12px, 1.5vw, 14px); color: #888;">
+                            Contributing to tools & docs
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LeakOS</h3>
+                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: clamp(14px, 1.6vw, 16px);">
+                        BlackArch Linux Security Community focused on penetration testing, 
+                        vulnerability research, and security tool development.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Tool Documentation</a></li>
+                        <li><a href="install.html">Installation Guide</a></li>
+                        <li><a href="#">Package Requests</a></li>
+                        <li><a href="#">Bug Reports</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 LeakOS. All rights reserved
+                
+            </div>
+        </div>
+    </footer>
+    
+ <!-- JavaScript -->
+ <script>
+ const slider = document.querySelector('.slider');
+ const track = document.getElementById('logoTrack');
+ const slides = document.querySelectorAll('.slidec');
+ 
+ if (!slider || !track || slides.length === 0) return;
+ 
+ let isPaused = false;
+ 
+ // Hanya pause & snap jika klik langsung di gambar (bukan area kosong)
+ slides.forEach((slide, index) => {
+ const handleSelect = (e) => {
+ e.stopPropagation();
+ if (isPaused) return; // sudah pause, skip
+ 
+ isPaused = true;
+ track.classList.add('paused');
+ track.style.animationPlayState = 'paused';
+ 
+ // Snap ke gambar ini (gunakan fungsi snap sebelumnya atau sederhana ini)
+ const slideWidth = slide.offsetWidth;
+ const gap = 16; // sesuaikan dengan CSS gap-mu
+ const sliderWidth = slider.offsetWidth;
+ const centerOffset = (sliderWidth - slideWidth) / 2;
+ const targetPos = index * (slideWidth + gap);
+ const translateX = -(targetPos - centerOffset);
+ 
+ track.style.transition = 'transform 0.5s ease-out';
+ track.style.transform = `translateX(${translateX}px)`;
+ 
+ setTimeout(() => {
+ slides.forEach(s => s.classList.remove('active'));
+ slide.classList.add('active');
+ // duplikat jika ada
+ const dupIndex = (index + 3) % slides.length;
+ if (slides[dupIndex]) slides[dupIndex].classList.add('active');
+ }, 500);
+ };
+ 
+ slide.addEventListener('click', handleSelect);
+ slide.addEventListener('touchend', (e) => {
+ if (!e.defaultPrevented) handleSelect(e);
+ }, { passive: true });
+ });
+ 
+ // Klik/tap di luar gambar → RESUME (bukan toggle)
+ document.addEventListener('click', (e) => {
+ if (isPaused && !Array.from(slides).some(s => s.contains(e.target))) {
+ resumeSlider();
+ }
+ });
+ 
+ document.addEventListener('touchend', (e) => {
+ if (isPaused && !Array.from(slides).some(s => s.contains(e.target))) {
+ resumeSlider();
+ }
+ });
+ 
+ function resumeSlider() {
+ isPaused = false;
+ track.classList.remove('paused');
+ track.style.animationPlayState = 'running';
+ track.style.transition = '';
+ track.style.transform = 'translateX(0)'; // reset posisi agar loop mulus
+ slides.forEach(s => s.classList.remove('active'));
+ });
+ 
+ </script>
+ 
+ 
+ <!-- Tambahkan kode JavaScript ini sebelum tag penutup </body> -->
+ <script>
+ // Carousel functionality
+ document.addEventListener('DOMContentLoaded', function() {
+ const slides = document.querySelectorAll('.carousel-slides .slide');
+ const dotsContainer = document.querySelector('.carousel-dots');
+ let currentSlide = 0;
+ 
+ // Create dots
+ if (slides.length > 0 && dotsContainer) {
+ slides.forEach((_, index) => {
+ const dot = document.createElement('div');
+ dot.classList.add('carousel-dot');
+ if (index === 0) dot.classList.add('active');
+ 
+ dot.addEventListener('click', () => {
+ goToSlide(index);
+ });
+ 
+ dotsContainer.appendChild(dot);
+ });
+ }
+ 
+ function goToSlide(slideIndex) {
+ // Remove active class from all slides and dots
+ slides.forEach(slide => slide.classList.remove('active'));
+ document.querySelectorAll('.carousel-dot').forEach(dot => dot.classList.remove('active'));
+ 
+ // Set new slide
+ currentSlide = slideIndex;
+ slides[currentSlide].classList.add('active');
+ document.querySelectorAll('.carousel-dot')[currentSlide].classList.add('active');
+ }
+ 
+ function nextSlide() {
+ let next = currentSlide + 1;
+ if (next >= slides.length) next = 0;
+ goToSlide(next);
+ }
+ 
+ // Auto slide every 5 seconds
+ let slideInterval = setInterval(nextSlide, 10000);
+ 
+ // Pause on hover
+ const carousel = document.querySelector('.carousel');
+ if (carousel) {
+ carousel.addEventListener('mouseenter', () => {
+ clearInterval(slideInterval);
+ });
+ 
+ carousel.addEventListener('mouseleave', () => {
+ slideInterval = setInterval(nextSlide, 10000);
+ });
+ }
+ 
+ // Touch/swipe support for mobile
+ let touchStartX = 0;
+ let touchEndX = 0;
+ 
+ if (carousel) {
+ carousel.addEventListener('touchstart', e => {
+ touchStartX = e.changedTouches[0].screenX;
+ clearInterval(slideInterval);
+ }, { passive: true });
+ 
+ carousel.addEventListener('touchend', e => {
+ touchEndX = e.changedTouches[0].screenX;
+ handleSwipe();
+ slideInterval = setInterval(nextSlide, 10000);
+ }, { passive: true });
+ }
+ 
+ function handleSwipe() {
+ const swipeThreshold = 50;
+ 
+ if (touchEndX < touchStartX - swipeThreshold) {
+ // Swipe left - next slide
+ nextSlide();
+ }
+ 
+ if (touchEndX > touchStartX + swipeThreshold) {
+ // Swipe right - previous slide
+ let prev = currentSlide - 1;
+ if (prev < 0) prev = slides.length - 1;
+ goToSlide(prev);
+ }
+ }
+ });
+ </script>
+</body>
+</html>

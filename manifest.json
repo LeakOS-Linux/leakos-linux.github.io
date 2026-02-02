@@ -1,0 +1,7 @@
+{
+  "name": "LeakOS Linux",
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#0037BD",
+  "background_color": "#0037BD"
+}

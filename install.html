@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeakOS - Installation Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Jersey+25+Charted&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blackarch-red: #ff2a2a;
+            --blackarch-dark: #0a0a0a;
+            --blackarch-gray: #1a1a1a;
+            --blackarch-light: #e0e0e0;
+            --terminal-green: #00ff00;
+            --hacker-purple: #8a2be2;
+            --accent-blue: #2a7fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--blackarch-dark);
+            color: var(--blackarch-light);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 42, 42, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(42, 127, 255, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+            font-size: 16px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid var(--blackarch-red);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            color: var(--blackarch-red);
+            font-size: clamp(22px, 3vw, 26px);
+        }
+        
+        .logo-text {
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(28px, 3.5vw, 22px);
+            font-weight: 700;
+            letter-spacing: 1px;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: var(--blackarch-red);
+            font-weight: bold !important;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: clamp(10px, 2vw, 15px);
+        }
+        
+        nav a {
+            color: var(--blackarch-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: clamp(13px, 1.4vw, 14px);
+            padding: clamp(5px, 0.8vw, 6px) clamp(8px, 1.2vw, 10px);
+            border-radius: 4px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--blackarch-red);
+            background-color: rgba(255, 42, 42, 0.1);
+        }
+        
+        nav a.active {
+            color: white;
+            background-color: var(--blackarch-red);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: clamp(40px, 10vw, 80px) 0 clamp(30px, 8vw, 60px);
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 42, 42, 0.2);
+        }
+        
+        .hero-subtitle {
+            color: var(--terminal-green);
+            font-family: 'JetBrains Mono', monospace, 'Courier New', Courier, monospace;
+            font-size: clamp(14px, 2vw, 18px);
+            letter-spacing: clamp(1px, 0.5vw, 2px);
+            margin-bottom: clamp(10px, 2vw, 15px);
+            text-transform: uppercase;
+        }
+        
+        .hero-title {
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 800;
+            margin-bottom: clamp(15px, 3vw, 20px);
+            background: linear-gradient(90deg, var(--blackarch-red), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+        
+        .hero-description {
+            font-size: clamp(14px, 2vw, 18px);
+            max-width: 800px;
+            margin: 0 auto clamp(20px, 4vw, 30px);
+            color: #b0b0b0;
+        }
+        
+        .hero-date {
+            display: inline-block;
+            background-color: rgba(255, 42, 42, 0.2);
+            color: var(--blackarch-red);
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 25px);
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace, 'Courier New', Courier, monospace;
+            font-weight: 600;
+            font-size: clamp(14px, 2vw, 18px);
+            margin-bottom: clamp(20px, 4vw, 30px);
+            border: 1px solid rgba(255, 42, 42, 0.4);
+        }
+        
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: clamp(15px, 2vw, 20px);
+            margin-top: clamp(20px, 4vw, 30px);
+            flex-wrap: wrap;
+        }
+        
+        .cta-primary {
+            background: var(--blackarch-red);
+            color: white;
+            padding: clamp(10px, 2vw, 14px) clamp(20px, 3vw, 32px);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: clamp(14px, 1.8vw, 16px);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 42, 42, 0.4);
+        }
+        
+        .cta-secondary {
+            background-color: transparent;
+            color: var(--blackarch-light);
+            padding: clamp(10px, 2vw, 14px) clamp(20px, 3vw, 32px);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: clamp(14px, 1.8vw, 16px);
+            border: 1px solid #374151;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .cta-secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            transform: translateY(-3px);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: clamp(30px, 8vw, 60px) 0;
+        }
+        
+        .section-title {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 700;
+            margin-bottom: clamp(25px, 5vw, 40px);
+            position: relative;
+            padding-bottom: clamp(10px, 2vw, 15px);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: clamp(40px, 6vw, 60px);
+            height: 3px;
+            background-color: var(--blackarch-red);
+        }
+        
+        .section-subtitle {
+            color: var(--blackarch-red);
+            font-family: 'JetBrains Mono', monospace, 'Courier New', Courier, monospace;
+            font-size: clamp(12px, 1.5vw, 14px);
+            letter-spacing: clamp(0.5px, 0.3vw, 1px);
+            text-transform: uppercase;
+            margin-bottom: clamp(8px, 1.5vw, 10px);
+        }
+        
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: clamp(20px, 3vw, 30px);
+            margin-top: clamp(20px, 4vw, 30px);
+        }
+        
+        .card {
+            background-color: var(--blackarch-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 42, 42, 0.1);
+            transition: all 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--blackarch-red);
+            box-shadow: 0 15px 30px rgba(255, 42, 42, 0.1);
+        }
+        
+        .card-header {
+            padding: clamp(15px, 3vw, 25px) clamp(15px, 3vw, 25px) clamp(10px, 2vw, 15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-icon {
+            color: var(--blackarch-red);
+            font-size: clamp(24px, 3vw, 28px);
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+        
+        .card-title {
+            font-size: clamp(16px, 2.2vw, 20px);
+            font-weight: 600;
+            margin-bottom: clamp(8px, 1.5vw, 10px);
+        }
+        
+        .card-body {
+            padding: clamp(15px, 2.5vw, 20px) clamp(15px, 3vw, 25px);
+            flex-grow: 1;
+        }
+        
+        .card-description {
+            color: #b0b0b0;
+            margin-bottom: clamp(15px, 2.5vw, 20px);
+            font-size: clamp(14px, 1.6vw, 16px);
+        }
+        
+        .card-features {
+            list-style: none;
+            margin-bottom: clamp(15px, 2.5vw, 20px);
+        }
+        
+        .card-features li {
+            margin-bottom: clamp(6px, 1vw, 8px);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(13px, 1.5vw, 15px);
+        }
+        
+        .card-features i {
+            color: var(--terminal-green);
+            font-size: clamp(12px, 1.2vw, 14px);
+        }
+        
+        .card-footer {
+            padding: clamp(12px, 2vw, 15px) clamp(15px, 3vw, 25px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        
+        .card-date {
+            font-family: 'JetBrains Mono', monospace, 'Courier New', Courier, monospace;
+            font-size: clamp(11px, 1.3vw, 13px);
+            color: var(--accent-blue);
+        }
+        
+        .card-btn {
+            background-color: rgba(255, 42, 42, 0.2);
+            color: var(--blackarch-red);
+            border: none;
+            padding: clamp(6px, 1.2vw, 8px) clamp(12px, 2vw, 18px);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace, 'Courier New', Courier, monospace;
+            font-size: clamp(11px, 1.3vw, 13px);
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .card-btn:hover {
+            background-color: rgba(255, 42, 42, 0.3);
+        }
+        
+        /* Installation Steps */
+        .install-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border-left: 3px solid var(--blackarch-red);
+        }
+        
+        .step-number {
+            background-color: var(--blackarch-red);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        
+        .step-desc {
+            color: #b0b0b0;
+            font-size: 13px;
+        }
+        
+        /* Download Cards */
+        .download-card {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(255, 42, 42, 0.1), rgba(42, 127, 255, 0.1));
+            border-radius: 8px;
+            border: 1px solid rgba(255, 42, 42, 0.2);
+            margin-top: 30px;
+        }
+        
+        .download-icon {
+            font-size: 48px;
+            color: var(--blackarch-red);
+            margin-bottom: 20px;
+        }
+        
+        .download-size {
+            display: inline-block;
+            background-color: rgba(255, 42, 42, 0.2);
+            color: var(--blackarch-red);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+        }
+        
+        .hash-box {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            text-align: left;
+            border: 1px solid rgba(255, 42, 42, 0.1);
+        }
+        
+        .hash-title {
+            color: var(--terminal-green);
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+            gap: clamp(15px, 3vw, 25px);
+            margin: clamp(30px, 8vw, 60px) 0;
+        }
+        
+        .stat-card {
+            width: 100%;
+            background-color: rgba(255, 42, 42, 0.05);
+            border-radius: 8px;
+            padding: clamp(20px, 4vw, 30px);
+            text-align: center;
+            border: 1px solid rgba(255, 42, 42, 0.1);
+            transition: all 0.3s;
+            overflow: hidden;
+            clip-path: polygon(0 0, 30% 0, 100% 19%, 100% 100%, 0 100%);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--blackarch-red);
+        }
+        
+        .stat-number {
+            font-size: clamp(18px, 5vw, 42px);
+            font-weight: 800;
+            color: var(--blackarch-red);
+            margin-bottom: clamp(8px, 1.5vw, 10px);
+            font-family: "Orbitron", sans-serif;
+        }
+        
+        .stat-label {
+            font-size: clamp(13px, 1.6vw, 15px);
+            color: #b0b0b0;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(255, 42, 42, 0.2);
+            padding: clamp(30px, 8vw, 60px) 0 clamp(20px, 4vw, 30px);
+            margin-top: clamp(30px, 8vw, 60px);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: clamp(20px, 4vw, 40px);
+            margin-bottom: clamp(25px, 5vw, 40px);
+        }
+        
+        .footer-section h3 {
+            font-size: clamp(16px, 2.2vw, 18px);
+            margin-bottom: clamp(15px, 3vw, 20px);
+            color: var(--blackarch-red);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: clamp(8px, 1.5vw, 12px);
+            font-size: clamp(14px, 1.6vw, 16px);
+        }
+        
+        .footer-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--blackarch-red);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            width: clamp(32px, 4vw, 40px);
+            height: clamp(32px, 4vw, 40px);
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--blackarch-red);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: clamp(20px, 4vw, 30px);
+            text-align: center;
+            color: #666;
+            font-size: clamp(12px, 1.5vw, 14px);
+        }
+        
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background-color: rgba(255, 42, 42, 0.1);
+            color: var(--blackarch-red);
+            padding: clamp(4px, 0.8vw, 5px) clamp(8px, 1.5vw, 12px);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace, 'Courier New', Courier, monospace;
+            font-size: clamp(10px, 1.2vw, 12px);
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 42, 42, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                height: auto;
+                gap: 15px;
+                padding: 10px 0;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-primary, .cta-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 26px;
+            }
+            
+            .hero-description {
+                font-size: 14px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .stat-number {
+                font-size: 32px;
+            }
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Orbitron", sans-serif;
+        }
+        
+        code, pre, .card-date, .badge, .hero-date, .hero-subtitle, .section-subtitle {
+            font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        
+                    </div>
+                    <div class="logo-text">LeakOS Linux</div>
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="installation.html" class="active">Installation</a></li>
+                        
+                        
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Installation Methods Section -->
+            <section>
+                <div class="section-subtitle">CHOOSE YOUR METHOD</div>
+                <h2 class="section-title">Installation Methods</h2>
+                
+                <div class="cards-grid">
+                    <!-- Live ISO Installation -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-compact-disc"></i>
+                            </div>
+                            <h3 class="card-title">Live ISO Installation</h3>
+                            <span class="badge">Recommended</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                Install LeakOS directly on your hardware for maximum performance and hardware access.
+                                Perfect for dedicated security workstations and penetration testing.
+                            </p>
+                            
+                            <div class="install-steps">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Download ISO</div>
+                                        <div class="step-desc">Get the latest LeakOS ISO from our mirrors</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Create Bootable USB</div>
+                                        <div class="step-desc">Use Rufus, Etcher or dd command to create bootable media</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Boot & Install</div>
+                                        <div class="step-desc">Boot from USB and follow the graphical installer</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">20-30 minutes installation</span>
+                            <button class="card-btn" onclick="location.href='#download'">Download</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Virtual Machine -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h3 class="card-title">Virtual Machine</h3>
+                            <span class="badge">Easy Setup</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                Run LeakOS inside VMware, VirtualBox, or Hyper-V. Perfect for testing, learning,
+                                and running alongside your main operating system.
+                            </p>
+                            
+                            <div class="install-steps">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Download OVA/VMDK</div>
+                                        <div class="step-desc">Get pre-configured VM images ready to import</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Import VM</div>
+                                        <div class="step-desc">Import into your virtualization software</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Configure & Run</div>
+                                        <div class="step-desc">Adjust resources and start the virtual machine</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <ul class="card-features">
+                                <li><i class="fas fa-check"></i> Pre-installed tools</li>
+                                <li><i class="fas fa-check"></i> Snapshot support</li>
+                                <li><i class="fas fa-check"></i> Network ready</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">Default: user:leak pass:leak</span>
+                            <button class="card-btn" onclick="location.href='#download'">Get VM</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Docker Container -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fab fa-docker"></i>
+                            </div>
+                            <h3 class="card-title">Docker Container</h3>
+                            <span class="badge">Lightweight</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                Run LeakOS tools in isolated Docker containers. Ideal for specific tools,
+                                development environments, and CI/CD pipelines.
+                            </p>
+                            
+                            <div class="install-steps">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Install Docker</div>
+                                        <div class="step-desc">Ensure Docker is installed on your system</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Pull Image</div>
+                                        <div class="step-desc">Download LeakOS Docker image from registry</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Run Container</div>
+                                        <div class="step-desc">Start container with necessary permissions</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <ul class="card-features">
+                                <li><i class="fas fa-check"></i> Isolated environments</li>
+                                <li><i class="fas fa-check"></i> Easy cleanup</li>
+                                <li><i class="fas fa-check"></i> Resource efficient</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">Docker Hub & GHCR</span>
+                            <button class="card-btn">Docker Pull</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- System Requirements -->
+            <section id="requirements">
+                <div class="section-subtitle">HARDWARE SPECS</div>
+                <h2 class="section-title">System Requirements</h2>
+                
+                <div class="cards-grid">
+                    <!-- Minimum Requirements -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <h3 class="card-title">Minimum Requirements</h3>
+                            <span class="badge">Basic Usage</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                For basic security testing and tool usage. Suitable for learning and lightweight tasks.
+                            </p>
+                            <ul class="card-features">
+                                <li><i class="fas fa-microchip"></i> 2-core 64-bit CPU</li>
+                                <li><i class="fas fa-memory"></i> 4GB RAM</li>
+                                <li><i class="fas fa-hdd"></i> 20GB free disk space</li>
+                                <li><i class="fas fa-ethernet"></i> Network interface</li>
+                                <li><i class="fas fa-usb"></i> USB 2.0 port</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">For: Learning & Testing</span>
+                            <button class="card-btn">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Recommended -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h3 class="card-title">Recommended</h3>
+                            <span class="badge">Professional Use</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                For serious penetration testing, CTF competitions, and security research.
+                            </p>
+                            <ul class="card-features">
+                                <li><i class="fas fa-microchip"></i> 4-core+ 64-bit CPU</li>
+                                <li><i class="fas fa-memory"></i> 8GB+ RAM (16GB ideal)</li>
+                                <li><i class="fas fa-hdd"></i> 50GB+ SSD storage</li>
+                                <li><i class="fas fa-network-wired"></i> Gigabit Ethernet</li>
+                                <li><i class="fas fa-wifi"></i> Wireless NIC (pentesting)</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">For: Professional Work</span>
+                            <button class="card-btn">View Details</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Virtualization -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <h3 class="card-title">Virtualization</h3>
+                            <span class="badge">VM Requirements</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-description">
+                                Requirements for running LeakOS in virtual machines (VMware, VirtualBox, KVM).
+                            </p>
+                            <ul class="card-features">
+                                <li><i class="fas fa-microchip"></i> VT-x/AMD-V enabled</li>
+                                <li><i class="fas fa-memory"></i> 2GB+ allocated RAM</li>
+                                <li><i class="fas fa-hdd"></i> 25GB virtual disk</li>
+                                <li><i class="fas fa-share-alt"></i> NAT/Bridged networking</li>
+                                <li><i class="fas fa-expand-alt"></i> 3D acceleration (optional)</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">For: Virtual Environments</span>
+                            <button class="card-btn">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+           
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LeakOS</h3>
+                    <p style="color: #b0b0b0; margin-bottom: 20px; font-size: clamp(14px, 1.6vw, 16px);">
+                        BlackArch Linux Security Community focused on penetration testing, 
+                        vulnerability research, and security tool development.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Installation Help</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Installation Guide</a></li>
+                        <li><a href="#">Troubleshooting</a></li>
+                        <li><a href="#">Hardware Compatibility</a></li>
+                        <li><a href="#">Driver Issues</a></li>
+                        <li><a href="#">Boot Problems</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">IRC Channel</a></li>
+                        <li><a href="#">Discord Server</a></li>
+                        <li><a href="#">Bug Tracker</a></li>
+                        <li><a href="#">Contribute</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 LeakOS - BlackArch Linux Security Distribution. All rights reserved.</p>
+                <p style="margin-top: 10px; font-size: clamp(11px, 1.3vw, 12px);">
+                    LeakOS is a penetration testing distribution for security professionals and researchers.
+                    Use responsibly and only on systems you own or have permission to test.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Card hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.card-icon i');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.2) rotate(5deg)';
+                        icon.style.transition = 'transform 0.3s';
+                    }
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.card-icon i');
+                    if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            });
+            
+            // Stats counter animation
+            const statNumbers = document.querySelectorAll('.stat-number');
+            const observerOptions = {
+                threshold: 0.5
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const statNumber = entry.target;
+                        const originalText = statNumber.textContent;
+                        const target = parseInt(originalText.replace(/[^0-9]/g, ''));
+                        
+                        if (originalText.includes('K')) {
+                            // Handle numbers with K suffix (e.g., 50K+)
+                            const actualTarget = target * 1000;
+                            animateCounter(statNumber, actualTarget, originalText);
+                        } else if (originalText.includes('%')) {
+                            // Handle percentages
+                            animatePercentage(statNumber, target, originalText);
+                        } else if (originalText.includes('/')) {
+                            // Handle time values like 24/7
+                            statNumber.textContent = originalText;
+                        } else {
+                            // Regular numbers
+                            animateCounter(statNumber, target, originalText);
+                        }
+                        
+                        observer.unobserve(statNumber);
+                    }
+                });
+            }, observerOptions);
+            
+            function animateCounter(element, target, originalText) {
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                        if (originalText.includes('+')) {
+                            element.textContent = Math.floor(current).toLocaleString() + '+';
+                        } else {
+                            element.textContent = Math.floor(current).toLocaleString();
+                        }
+                    } else {
+                        if (originalText.includes('+')) {
+                            element.textContent = Math.floor(current).toLocaleString() + '+';
+                        } else {
+                            element.textContent = Math.floor(current).toLocaleString();
+                        }
+                    }
+                }, 30);
+            }
+            
+            function animatePercentage(element, target, originalText) {
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += 1;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                        element.textContent = current.toFixed(1) + '%';
+                    } else {
+                        element.textContent = current.toFixed(1) + '%';
+                    }
+                }, 20);
+            }
+            
+            statNumbers.forEach(statNumber => {
+                observer.observe(statNumber);
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+        
+        // Download simulation
+        function downloadFile(type) {
+            let message = '';
+            let icon = 'fas fa-download';
+            
+            switch(type) {
+                case 'iso':
+                    message = 'Starting LeakOS ISO download (4.2 GB)...';
+                    break;
+                case 'vm':
+                    message = 'Starting VM Image download (6.1 GB)...';
+                    break;
+                case 'netinstall':
+                    message = 'Starting Netinstall download (800 MB)...';
+                    icon = 'fas fa-network-wired';
+                    break;
+            }
+            
+            // Create download notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--blackarch-red);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 6px;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 5px 15px rgba(255, 42, 42, 0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <i class="${icon}"></i>
+                <div>
+                    <strong>${message}</strong><br>
+                    <small>Check your browser downloads</small>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+            
+            // Add CSS animations
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+    </script>
+</body>
+</html>
