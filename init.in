@@ -1,5 +1,7 @@
 #!/bin/sh
 # Init script for custom LFS Live ISO - Coreutils version (no BusyBox)
+# Auto-detect boot media, robust /proc mount handling
+# Fixed: try_mount global, Ventoy loop timing, case pattern, exfat support
 
 PATH=/usr/bin:/usr/sbin:/bin:/sbin
 export PATH
@@ -29,8 +31,6 @@ find_init() {
   for candidate in \
     /sbin/init \
     /usr/sbin/init \
-    /usr/bin/init \
-    /usr/local/bin/init \
     /usr/lib/systemd/systemd \
     /lib/systemd/systemd \
     /usr/lib/sysvinit/init \
@@ -103,15 +103,20 @@ find_boot_device() {
 
     # --------------------------------------------------
     # PRIORITAS 2: USB removable (sdb, sdc, sdd, sde)
-    # Coba partisi dulu baru disk penuh
+    # Glob: partisi dulu ([0-9]*), baru disk penuh
     # --------------------------------------------------
-    for dev in \
-      /dev/sdb1 /dev/sdb2 /dev/sdb3 /dev/sdb \
-      /dev/sdc1 /dev/sdc2 /dev/sdc3 /dev/sdc \
-      /dev/sdd1 /dev/sdd2 /dev/sdd3 /dev/sdd \
-      /dev/sde1 /dev/sde2 /dev/sde3 /dev/sde; do
+    for dev in /dev/sd[b-e][0-9]*; do
       [ -b "$dev" ] || continue
-      log_msg "Probing USB $dev..."
+      log_msg "Probing USB partition $dev..."
+      if try_mount "$dev"; then
+        device="$dev"
+        log_msg "Boot media DETECTED on USB $dev"
+        return 0
+      fi
+    done
+    for dev in /dev/sd[b-e]; do
+      [ -b "$dev" ] || continue
+      log_msg "Probing USB disk $dev..."
       if try_mount "$dev"; then
         device="$dev"
         log_msg "Boot media DETECTED on USB $dev"
@@ -121,9 +126,8 @@ find_boot_device() {
 
     # --------------------------------------------------
     # PRIORITAS 3: Optical (sr*, cdrom, dvd)
-    # Rufus ISO mode burn ke CD/DVD, atau boot dari optik
     # --------------------------------------------------
-    for dev in /dev/sr0 /dev/sr1 /dev/cdrom /dev/cdrom1 /dev/dvd /dev/dvd1; do
+    for dev in /dev/sr[0-9]* /dev/cdrom* /dev/dvd*; do
       [ -b "$dev" ] || continue
       log_msg "Probing optical $dev..."
       if try_mount "$dev"; then
@@ -134,13 +138,21 @@ find_boot_device() {
     done
 
     # --------------------------------------------------
-    # PRIORITAS 4: NVMe (partisi dulu, lalu disk penuh)
+    # PRIORITAS 4: NVMe — partisi dulu, lalu disk penuh
+    # nvme0n1p* = partisi, nvme[0-9]n[0-9] = disk
     # --------------------------------------------------
-    for dev in \
-      /dev/nvme0n1p1 /dev/nvme0n1p2 /dev/nvme0n1p3 /dev/nvme0n1 \
-      /dev/nvme1n1p1 /dev/nvme1n1p2 /dev/nvme1n1p3 /dev/nvme1n1; do
+    for dev in /dev/nvme[0-9]n[0-9]p[0-9]*; do
       [ -b "$dev" ] || continue
-      log_msg "Probing NVMe $dev..."
+      log_msg "Probing NVMe partition $dev..."
+      if try_mount "$dev"; then
+        device="$dev"
+        log_msg "Boot media DETECTED on NVMe $dev"
+        return 0
+      fi
+    done
+    for dev in /dev/nvme[0-9]n[0-9]; do
+      [ -b "$dev" ] || continue
+      log_msg "Probing NVMe disk $dev..."
       if try_mount "$dev"; then
         device="$dev"
         log_msg "Boot media DETECTED on NVMe $dev"
@@ -151,11 +163,18 @@ find_boot_device() {
     # --------------------------------------------------
     # PRIORITAS 5: VirtIO (QEMU/KVM/VirtualBox)
     # --------------------------------------------------
-    for dev in \
-      /dev/vda1 /dev/vda2 /dev/vda \
-      /dev/vdb1 /dev/vdb2 /dev/vdb; do
+    for dev in /dev/vd[a-z][0-9]*; do
       [ -b "$dev" ] || continue
-      log_msg "Probing VirtIO $dev..."
+      log_msg "Probing VirtIO partition $dev..."
+      if try_mount "$dev"; then
+        device="$dev"
+        log_msg "Boot media DETECTED on VirtIO $dev"
+        return 0
+      fi
+    done
+    for dev in /dev/vd[a-z]; do
+      [ -b "$dev" ] || continue
+      log_msg "Probing VirtIO disk $dev..."
       if try_mount "$dev"; then
         device="$dev"
         log_msg "Boot media DETECTED on VirtIO $dev"
@@ -165,12 +184,20 @@ find_boot_device() {
 
     # --------------------------------------------------
     # PRIORITAS 6: eMMC / SD card
+    # mmcblk*p* = partisi, mmcblk[0-9] = disk
     # --------------------------------------------------
-    for dev in \
-      /dev/mmcblk0p1 /dev/mmcblk0p2 /dev/mmcblk0p3 /dev/mmcblk0 \
-      /dev/mmcblk1p1 /dev/mmcblk1p2 /dev/mmcblk1p3 /dev/mmcblk1; do
+    for dev in /dev/mmcblk[0-9]p[0-9]*; do
       [ -b "$dev" ] || continue
-      log_msg "Probing eMMC $dev..."
+      log_msg "Probing eMMC partition $dev..."
+      if try_mount "$dev"; then
+        device="$dev"
+        log_msg "Boot media DETECTED on eMMC $dev"
+        return 0
+      fi
+    done
+    for dev in /dev/mmcblk[0-9]; do
+      [ -b "$dev" ] || continue
+      log_msg "Probing eMMC disk $dev..."
       if try_mount "$dev"; then
         device="$dev"
         log_msg "Boot media DETECTED on eMMC $dev"
@@ -182,9 +209,18 @@ find_boot_device() {
     # PRIORITAS 7: sda — internal disk / Rufus DD mode
     # Diletakkan terakhir agar tidak salah mount OS utama
     # --------------------------------------------------
-    for dev in /dev/sda1 /dev/sda2 /dev/sda3 /dev/sda; do
+    for dev in /dev/sda[0-9]*; do
       [ -b "$dev" ] || continue
-      log_msg "Probing $dev..."
+      log_msg "Probing sda partition $dev..."
+      if try_mount "$dev"; then
+        device="$dev"
+        log_msg "Boot media DETECTED on $dev"
+        return 0
+      fi
+    done
+    for dev in /dev/sda; do
+      [ -b "$dev" ] || continue
+      log_msg "Probing sda disk $dev..."
       if try_mount "$dev"; then
         device="$dev"
         log_msg "Boot media DETECTED on $dev"
@@ -302,7 +338,7 @@ Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
 root    ALL=(ALL:ALL) ALL
 %sudo   ALL=(ALL:ALL) ALL
-live    ALL=(ALL:ALL) ALL
+live    ALL=(ALL) NOPASSWD: ALL
 EOF
   chmod 440 /.root/etc/sudoers
 
@@ -357,6 +393,7 @@ This is your home directory. Standard folders have been created:
 - Music      : For music files
 - Pictures   : For images
 - Videos     : For video files
+
 Enjoy your LFS experience!
 EOF
 
@@ -415,7 +452,6 @@ XDG_DOWNLOAD_DIR="$HOME/Downloads"
 XDG_MUSIC_DIR="$HOME/Music"
 XDG_PICTURES_DIR="$HOME/Pictures"
 XDG_VIDEOS_DIR="$HOME/Videos"
-
 EOF
     chown -R 1000:1000 /.root/home/live/.config
   fi
@@ -508,17 +544,15 @@ do_mount_root() {
   modprobe -q exfat      || true
   modprobe -q iso9660    || true
   modprobe -q usb-storage || true
-  modprobe -q r8188eu || true
-  modprobe -q e1000 || true
-  modprobe -q e1000e || true
-  modprobe -q pcnet32 || true
   modprobe -q sr_mod     || true
   modprobe -q xhci_hcd   || true
   modprobe -q ehci_hcd   || true
   modprobe -q uhci_hcd   || true
   modprobe -q vboxvideo  || true
   modprobe -q virtio_gpu || true
-  modprobe -q vmwgfx     || true
+  modprobe -q e1000     || true
+  modprobe -q e1000e || true
+  modprobe -q pcnet32 || true
   modprobe -q drm        || true
   modprobe -q virtio_net || true
   modprobe -q loop max_loop=64 || true
@@ -616,7 +650,7 @@ else
   $UDEVD --daemon --resolve-names=never 2>/dev/null
   sleep 1
   udevadm trigger --action=add 2>/dev/null || true
-  udevadm settle --timeout=10 2>/dev/null || true
+  udevadm settle --timeout=30 2>/dev/null || true
   log_msg "udev ready"
 fi
 
