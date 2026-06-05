@@ -271,33 +271,68 @@ find_boot_device() {
 ensure_users() {
   log_msg "Ensuring user database exists in overlay..."
 
-  if [ ! -f /.root/etc/passwd ] || [ ! -s /.root/etc/passwd ]; then
-    log_msg "Creating minimal /etc/passwd in overlay..."
-    cat > /.root/etc/passwd << 'EOF'
-root:x:0:0:root:/root:/bin/bash
-live:x:1000:1000:Live User:/home/live:/bin/bash
-nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-EOF
-  fi
+  # Password live — sha512 dari "live"
+  LIVE_HASH='$6$2AJ3utKN719Q90VR$oTTnjl.5uXDdizR7sBS8kasr6u0kc5CD5XiWLKbv1jA8K6RsM6/362dWveOy7fSZaxpgIPywXx6.k6lHBkkNW1'
 
-  if [ ! -f /.root/etc/group ] || [ ! -s /.root/etc/group ]; then
-    log_msg "Creating minimal /etc/group in overlay..."
-    cat > /.root/etc/group << 'EOF'
-root:x:0:
-live:x:1000:
-nogroup:x:65534:
-EOF
+  # /etc/passwd — tulis ulang seluruhnya:
+  # hapus semua user non-system (uid 1000-60000) lalu tulis live
+  log_msg "Writing /etc/passwd (replacing uid>=1000 users with live)..."
+  if [ -f /.root/etc/passwd ]; then
+    # Simpan baris system (uid < 1000 dan uid >= 65534), buang uid 1000-65533
+    grep -v -E '^[^:]+:[^:]*:(10[0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-3]):' \
+      /.root/etc/passwd > /tmp/passwd.tmp 2>/dev/null || true
+    # Pastikan nobody tidak ikut terhapus
+    grep -q "^nobody:" /tmp/passwd.tmp 2>/dev/null || \
+      echo "nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin" >> /tmp/passwd.tmp
+  else
+    printf "root:x:0:0:root:/root:/bin/bash\nnobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin\n" \
+      > /tmp/passwd.tmp
   fi
+  # Tambahkan live
+  echo "live:x:1000:1000:Live User:/home/live:/bin/bash" >> /tmp/passwd.tmp
+  cp /tmp/passwd.tmp /.root/etc/passwd
+  chmod 644 /.root/etc/passwd
+  rm -f /tmp/passwd.tmp
 
-  if [ ! -f /.root/etc/shadow ] || [ ! -s /.root/etc/shadow ]; then
-    log_msg "Creating minimal /etc/shadow in overlay..."
-    cat > /.root/etc/shadow << 'EOF'
-root:*:19490:0:99999:7:::
-live:$6$2AJ3utKN719Q90VR$oTTnjl.5uXDdizR7sBS8kasr6u0kc5CD5XiWLKbv1jA8K6RsM6/362dWveOy7fSZaxpgIPywXx6.k6lHBkkNW1:19490:0:99999:7:::
-nobody:*:19490:0:99999:7:::
-EOF
-    chmod 600 /.root/etc/shadow
+  # /etc/group — hapus group uid>=1000 (selain system), tambah live
+  log_msg "Writing /etc/group (replacing gid>=1000 groups with live)..."
+  if [ -f /.root/etc/group ]; then
+    grep -v -E '^[^:]+:[^:]*:(10[0-9]{2}|[2-9][0-9]{3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-3]):' \
+      /.root/etc/group > /tmp/group.tmp 2>/dev/null || true
+    grep -q "^nogroup:" /tmp/group.tmp 2>/dev/null || \
+      echo "nogroup:x:65534:" >> /tmp/group.tmp
+  else
+    printf "root:x:0:\nnogroup:x:65534:\n" > /tmp/group.tmp
   fi
+  echo "live:x:1000:" >> /tmp/group.tmp
+  cp /tmp/group.tmp /.root/etc/group
+  chmod 644 /.root/etc/group
+  rm -f /tmp/group.tmp
+
+  # /etc/shadow — hapus entry uid>=1000, tulis ulang live
+  log_msg "Writing /etc/shadow (replacing non-system users with live)..."
+  if [ -f /.root/etc/shadow ]; then
+    # Ambil semua user dari passwd yang bukan live/nobody untuk referensi
+    # Hapus shadow entry yang user-nya tidak ada di passwd lagi
+    > /tmp/shadow.tmp
+    while IFS=: read -r user rest; do
+      if grep -q "^${user}:" /.root/etc/passwd 2>/dev/null; then
+        echo "${user}:${rest}" >> /tmp/shadow.tmp
+      fi
+    done < /.root/etc/shadow
+    # Pastikan live ada dengan hash yang benar
+    if grep -q "^live:" /tmp/shadow.tmp 2>/dev/null; then
+      sed -i "s|^live:[^:]*:|live:${LIVE_HASH}:|" /tmp/shadow.tmp
+    else
+      printf 'live:%s:19490:0:99999:7:::\n' "$LIVE_HASH" >> /tmp/shadow.tmp
+    fi
+  else
+    printf 'root:*:19490:0:99999:7:::\nnobody:*:19490:0:99999:7:::\n' > /tmp/shadow.tmp
+    printf 'live:%s:19490:0:99999:7:::\n' "$LIVE_HASH" >> /tmp/shadow.tmp
+  fi
+  cp /tmp/shadow.tmp /.root/etc/shadow
+  chmod 600 /.root/etc/shadow
+  rm -f /tmp/shadow.tmp
 
   mkdir -p /.root/etc/pam.d
 
@@ -342,11 +377,27 @@ live    ALL=(ALL) NOPASSWD: ALL
 EOF
   chmod 440 /.root/etc/sudoers
 
+  # sudo & wheel group — pastikan ada dan live masuk di dalamnya
   if ! grep -q "^sudo:" /.root/etc/group 2>/dev/null; then
     echo "sudo:x:27:live" >> /.root/etc/group
+  else
+    # Tambah live ke group sudo jika belum ada
+    if ! grep -q "^sudo:.*live" /.root/etc/group 2>/dev/null; then
+      sed -i "s/^sudo:\(.*\):/sudo:\1,live:/" /.root/etc/group 2>/dev/null || true
+    fi
   fi
   if ! grep -q "^wheel:" /.root/etc/group 2>/dev/null; then
     echo "wheel:x:10:live" >> /.root/etc/group
+  else
+    if ! grep -q "^wheel:.*live" /.root/etc/group 2>/dev/null; then
+      sed -i "s/^wheel:\(.*\):/wheel:\1,live:/" /.root/etc/group 2>/dev/null || true
+    fi
+  fi
+
+  # Fix permission home live — harus 755 bukan 700 agar bisa diakses
+  if [ -d /.root/home/live ]; then
+    chmod 755 /.root/home/live
+    chown 1000:1000 /.root/home/live
   fi
 
   cat > /.root/etc/pam.d/sudo << 'EOF'
@@ -355,27 +406,29 @@ account    sufficient   pam_unix.so
 session    sufficient   pam_unix.so
 EOF
 
-  if [ ! -d /.root/home/live ]; then
-    log_msg "Creating home directory for live user with standard folders..."
-    mkdir -p /.root/home/live
-    mkdir -p /.root/home/live/{Desktop,Documents,Downloads,Music,Pictures,Videos}
-    mkdir -p /.root/home/live/{.local/share,.config,.cache,.ssh,.gnupg}
-    mkdir -p /.root/home/live/{temp,bin}
-    chown -R 1000:1000 /.root/home/live
-    chmod 700 /.root/home/live
-    chmod 755 /.root/home/live/{Desktop,Documents,Downloads,Music,Pictures,Videos}
-    chmod 700 /.root/home/live/{.ssh,.gnupg}
-    log_msg "Created standard folders for live user"
-  else
-    log_msg "Home directory exists, ensuring standard folders..."
-    for folder in Desktop Documents Downloads Music Pictures Videos; do
-      if [ ! -d "/.root/home/live/$folder" ]; then
-        mkdir -p "/.root/home/live/$folder"
-        chown 1000:1000 "/.root/home/live/$folder"
-        chmod 755 "/.root/home/live/$folder"
+  # Hapus home directory user lama (uid 1000 selain live) jika ada
+  if [ -d /.root/home ]; then
+    for homedir in /.root/home/*; do
+      [ -d "$homedir" ] || continue
+      basename_dir=$(basename "$homedir")
+      if [ "$basename_dir" != "live" ]; then
+        log_msg "Removing old user home: $homedir"
+        rm -rf "$homedir"
       fi
     done
   fi
+
+  # Buat home live
+  log_msg "Creating home directory for live user..."
+  mkdir -p /.root/home/live
+  mkdir -p /.root/home/live/{Desktop,Documents,Downloads,Music,Pictures,Videos}
+  mkdir -p /.root/home/live/{.local/share,.config,.cache,.ssh,.gnupg}
+  mkdir -p /.root/home/live/{temp,bin}
+  chown -R 1000:1000 /.root/home/live
+  chmod 755 /.root/home/live
+  chmod 755 /.root/home/live/{Desktop,Documents,Downloads,Music,Pictures,Videos}
+  chmod 700 /.root/home/live/{.ssh,.gnupg}
+  log_msg "Home directory for live ready" 
 
   if [ ! -d /.root/etc/skel ]; then
     log_msg "Creating /etc/skel with standard folders..."
